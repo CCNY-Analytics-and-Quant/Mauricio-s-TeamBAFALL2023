@@ -1,0 +1,74 @@
+1. Convert all variables to dynamic inputs:
+
+def get_user_input(prompt):     return int(input(prompt))  def calculate_account_balance(acct_bal, deposit, cur_age, ret_age, salary, rf_rate, match_rate):     for year in range(cur_age, ret_age):         salary *= 1 + rf_rate         matching = salary * match_rate         acct_bal += deposit + matching     return acct_bal  def main():     acct_bal = get_user_input("What is your current account balance? ")     deposit = get_user_input("How much will you contribute every year? ")     cur_age = get_user_input("How old are you? ")     ret_age = get_user_input("When will you retire? ")     salary = get_user_input("What is your starting salary? ")     rf_rate = get_user_input("What is the inflation rate? ")     match_rate = get_user_input("What is your company's match rate? ")      acct_bal = calculate_account_balance(acct_bal, deposit, cur_age, ret_age, salary, rf_rate, match_rate)      print("Final account balance:", acct_bal)  if __name__ == "__main__":     main()
+
+2. Add investment returns (assume 14% annual return) to both loops:
+
+def get_user_input(prompt):
+    return int(input(prompt))
+
+def calculate_account_balance(acct_bal, deposit, cur_age, ret_age, salary, rf_rate, match_rate):
+    investment_return_rate = 0.14  # 14% annual return
+    for year in range(cur_age, ret_age):
+        salary *= 1 + rf_rate
+        matching = salary * match_rate
+        acct_bal += deposit + matching + acct_bal * investment_return_rate
+    return acct_bal
+
+def main():
+    acct_bal = get_user_input("What is your current account balance? ")
+    deposit = get_user_input("How much will you contribute every year? ")
+    cur_age = get_user_input("How old are you? ")
+    ret_age = get_user_input("When will you retire? ")
+    salary = get_user_input("What is your starting salary? ")
+    rf_rate = get_user_input("What is the inflation rate? ")
+    match_rate = get_user_input("What is your company's match rate? ")
+
+    acct_bal = calculate_account_balance(acct_bal, deposit, cur_age, ret_age, salary, rf_rate, match_rate)
+
+    print("Final account balance:", acct_bal)
+
+if __name__ == "__main__":
+    main()
+
+3a and 3b):
+
+def get_user_input(prompt):
+    return int(input(prompt))
+
+def estimate_retirement_balance(acct_bal, deposit, cur_age, ret_age, salary, match_rate, inv, rf_rate):
+    for year in range(cur_age, ret_age):
+        salary *= 1 + rf_rate
+        matching = salary * match_rate
+        inv *= 1 + 0.14
+        acct_bal += deposit + matching + inv
+    return acct_bal
+
+def estimate_retirement_age(acct_bal, salary, deposit, inv, bal_goal, match_rate, rf_rate):
+    cur_age = 0
+    while acct_bal < bal_goal:
+        salary *= 1 + rf_rate
+        matching = salary * match_rate
+        inv *= 1 + 0.14
+        acct_bal += deposit + matching + inv
+        cur_age += 1
+    return cur_age
+
+def main():
+    acct_bal = get_user_input("What is your current account balance? ")
+    salary = get_user_input("What is your starting salary? ")
+    cur_age = get_user_input("How old are you? ")
+    deposit = get_user_input("How much will you contribute every year? ")
+    inv = get_user_input("How much are you initially investing? ")
+    bal_goal = get_user_input("How much money do you want to retire with? ")
+    match_rate = float(input("What percent of your salary does your company match? ")) / 100
+    rf_rate = 0.025
+
+    desired_balance = estimate_retirement_balance(acct_bal, deposit, cur_age, cur_age + 1, salary, match_rate, inv, rf_rate)
+    print(f"Desired retirement balance: {desired_balance}")
+
+    retirement_age = estimate_retirement_age(acct_bal, salary, deposit, inv, bal_goal, match_rate, rf_rate)
+    print(f"You can retire at the age of: {retirement_age}")
+
+if __name__ == "__main__":
+    main()
